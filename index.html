@@ -1,0 +1,1072 @@
+catatan : claude Sikupras
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Penjelajah Potensi Anak - Berbasis Sains</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --sky: #38BDF8;
+    --emerald: #34D399;
+    --amber: #FBBF24;
+    --rose: #FB7185;
+    --violet: #A78BFA;
+    --bg: #F0FAFA;
+    --card: #FFFFFF;
+    --text: #1E3A5F;
+    --muted: #64748B;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    min-height: 100vh;
+  }
+  h1,h2,h3 { font-family: 'Poppins', sans-serif; }
+
+  /* ── LANDING ── */
+  .hero-gradient {
+    background: linear-gradient(135deg, #E0F2FE 0%, #DCFCE7 50%, #FEF3C7 100%);
+  }
+  .bubble {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: white; border-radius: 999px;
+    padding: 8px 18px; font-weight: 700; font-size: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.08);
+  }
+  .card {
+    background: white; border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.07);
+    padding: 24px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #38BDF8, #34D399);
+    color: white; border: none; border-radius: 999px;
+    padding: 14px 36px; font-family: 'Poppins', sans-serif;
+    font-weight: 700; font-size: 16px; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(56,189,248,.35);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(56,189,248,.45); }
+  .btn-outline {
+    background: white; border: 2.5px solid #38BDF8; color: #0284C7;
+    border-radius: 999px; padding: 12px 28px;
+    font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px;
+    cursor: pointer; transition: all .15s;
+  }
+  .btn-outline:hover { background: #E0F2FE; }
+  .btn-amber {
+    background: linear-gradient(135deg, #FBBF24, #F97316);
+    color: white; border: none; border-radius: 999px;
+    padding: 13px 30px; font-family: 'Poppins', sans-serif;
+    font-weight: 700; font-size: 15px; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(251,191,36,.35); transition: transform .15s;
+  }
+  .btn-amber:hover { transform: translateY(-2px); }
+
+  /* ── PROGRESS ── */
+  .progress-track {
+    background: #E2E8F0; border-radius: 999px; height: 10px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 999px;
+    background: linear-gradient(90deg, #38BDF8, #34D399);
+    transition: width .4s ease;
+  }
+
+  /* ── QUESTIONS ── */
+  .q-card {
+    background: white; border-radius: 18px;
+    border: 2.5px solid #E0F2FE;
+    padding: 20px 22px; margin-bottom: 18px;
+    transition: border-color .2s;
+  }
+  .q-card:hover { border-color: #38BDF8; }
+  .q-group-label {
+    display: inline-block; border-radius: 999px;
+    padding: 4px 16px; font-size: 12px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px;
+  }
+  .scale-btn {
+    flex: 1; border-radius: 12px; border: 2px solid #E2E8F0;
+    background: white; padding: 10px 4px; cursor: pointer;
+    font-size: 13px; font-weight: 700; color: #64748B;
+    transition: all .15s; text-align: center;
+    font-family: 'Nunito', sans-serif;
+  }
+  .scale-btn:hover { border-color: #38BDF8; background: #E0F2FE; color: #0284C7; }
+  .scale-btn.selected-0 { background: #FEF2F2; border-color: #FDA4AF; color: #E11D48; }
+  .scale-btn.selected-1 { background: #FFFBEB; border-color: #FCD34D; color: #B45309; }
+  .scale-btn.selected-2 { background: #ECFDF5; border-color: #6EE7B7; color: #047857; }
+  .scale-btn.selected-3 { background: #EFF6FF; border-color: #93C5FD; color: #1D4ED8; }
+
+  /* ── RESULTS ── */
+  .strength-bar {
+    background: #F0F9FF; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px;
+  }
+  .strength-fill {
+    height: 12px; border-radius: 999px; transition: width .8s ease;
+  }
+  .domain-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    border-radius: 14px; padding: 12px 18px; font-weight: 700; font-size: 14px;
+    margin: 6px; flex-direction: column; text-align: center; min-width: 130px;
+  }
+  .rec-card {
+    border-radius: 16px; padding: 18px 20px; margin-bottom: 14px;
+    border-left: 5px solid;
+  }
+
+  /* ── SECTIONS ── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── PRINT ── */
+  @media print {
+    .no-print { display: none !important; }
+    body { background: white; }
+    .section { display: block !important; }
+    #section-landing, #section-profile, #section-quiz { display: none !important; }
+    #section-results { display: block !important; }
+  }
+
+  /* ── FLOATING DECO ── */
+  .float-emoji {
+    position: absolute; font-size: 32px; opacity: .15; pointer-events: none; user-select: none;
+  }
+  .animate-float {
+    animation: floatY 4s ease-in-out infinite;
+  }
+  @keyframes floatY {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* INPUT */
+  .form-input {
+    width: 100%; border: 2.5px solid #CBD5E1; border-radius: 12px;
+    padding: 12px 16px; font-family: 'Nunito', sans-serif; font-size: 15px;
+    color: #1E3A5F; transition: border-color .2s; background: white;
+  }
+  .form-input:focus { outline: none; border-color: #38BDF8; }
+
+  /* RADAR CHART sizing */
+  #radarChart, #barChart { max-height: 340px; }
+
+  /* Alert disclaimer */
+  .disclaimer {
+    background: #FFF7ED; border: 2px solid #FED7AA; border-radius: 14px;
+    padding: 16px 20px; font-size: 14px; color: #7C2D12;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 1 · LANDING
+═══════════════════════════════════════════════════════════ -->
+<div id="section-landing" class="section active">
+  <div class="hero-gradient min-h-screen flex flex-col">
+
+    <!-- NAV -->
+    <nav class="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto w-full">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🌟</span>
+        <span class="font-black text-lg" style="color:#0284C7">Potensi Anak</span>
+      </div>
+      <span class="text-xs font-bold px-3 py-1 rounded-full" style="background:#DCFCE7;color:#166534">Berbasis Sains</span>
+    </nav>
+
+    <!-- HERO -->
+    <div class="flex-1 flex flex-col items-center justify-center text-center px-6 py-12 max-w-3xl mx-auto relative">
+      <!-- floating deco -->
+      <span class="float-emoji animate-float" style="top:10%;left:5%">🎨</span>
+      <span class="float-emoji animate-float" style="top:20%;right:8%;animation-delay:.8s">🎵</span>
+      <span class="float-emoji animate-float" style="bottom:25%;left:3%;animation-delay:1.4s">⚽</span>
+      <span class="float-emoji animate-float" style="bottom:30%;right:5%;animation-delay:.4s">🔬</span>
+
+      <div class="flex flex-wrap justify-center gap-3 mb-8">
+        <span class="bubble" style="color:#0284C7">🧠 VIA Character Strengths</span>
+        <span class="bubble" style="color:#059669">🌱 Talent Development</span>
+        <span class="bubble" style="color:#D97706">📊 Observasi Berbasis Bukti</span>
+      </div>
+
+      <h1 class="font-black mb-4 leading-tight" style="font-size:clamp(28px,6vw,52px);color:#1E3A5F">
+        Temukan Kekuatan &<br/>
+        <span style="background:linear-gradient(135deg,#38BDF8,#34D399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Potensi Anakmu</span>
+      </h1>
+
+      <p class="text-lg mb-10 max-w-xl" style="color:#475569;line-height:1.7">
+        Panduan observasi ilmiah untuk orang tua — temukan kekuatan karakter, minat, dan bakat unik
+        anak usia <strong>6–10 tahun</strong> secara positif dan terstruktur.
+      </p>
+
+      <button class="btn-primary text-lg" onclick="goTo('section-profile')">
+        🚀 Mulai Penjelajahan
+      </button>
+
+      <p class="mt-5 text-sm" style="color:#94A3B8">⏱ Estimasi waktu: 10–15 menit · 55 pertanyaan observasi</p>
+    </div>
+
+    <!-- FEATURE CARDS -->
+    <div class="max-w-5xl mx-auto w-full px-6 pb-16">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="card text-center">
+          <div class="text-4xl mb-3">🌈</div>
+          <h3 class="font-bold text-base mb-2">7 Domain Potensi</h3>
+          <p class="text-sm" style="color:#64748B">Musik, Matematika, Bahasa, Olahraga, Sosial, Alam, Visual — temukan di mana anak bersinar.</p>
+        </div>
+        <div class="card text-center">
+          <div class="text-4xl mb-3">💪</div>
+          <h3 class="font-bold text-base mb-2">24 Kekuatan Karakter</h3>
+          <p class="text-sm" style="color:#64748B">Berbasis VIA Institute on Character — ilmu psikologi positif yang sudah terbukti secara riset global.</p>
+        </div>
+        <div class="card text-center">
+          <div class="text-4xl mb-3">🎯</div>
+          <h3 class="font-bold text-base mb-2">Rekomendasi Konkret</h3>
+          <p class="text-sm" style="color:#64748B">Kegiatan nyata, saran grit & growth mindset yang bisa langsung diterapkan orang tua.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 2 · PROFIL ANAK
+═══════════════════════════════════════════════════════════ -->
+<div id="section-profile" class="section">
+  <div class="max-w-xl mx-auto px-4 py-10">
+
+    <button class="btn-outline mb-6 text-sm" onclick="goTo('section-landing')">← Kembali</button>
+
+    <div class="card">
+      <div class="text-center mb-6">
+        <div class="text-5xl mb-3">👦</div>
+        <h2 class="text-2xl font-bold">Profil Anak</h2>
+        <p class="text-sm mt-1" style="color:#64748B">Informasi ini akan muncul di laporan hasil</p>
+      </div>
+
+      <div class="space-y-5">
+        <div>
+          <label class="block font-bold mb-2 text-sm">Nama Anak <span style="color:#E11D48">*</span></label>
+          <input id="childName" type="text" class="form-input" placeholder="Mis. Budi Santoso" />
+        </div>
+        <div>
+          <label class="block font-bold mb-2 text-sm">Usia Anak <span style="color:#E11D48">*</span></label>
+          <select id="childAge" class="form-input">
+            <option value="">-- Pilih Usia --</option>
+            <option>6 tahun</option><option>7 tahun</option><option>8 tahun</option>
+            <option>9 tahun</option><option>10 tahun</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold mb-2 text-sm">Nama Orang Tua / Wali</label>
+          <input id="parentName" type="text" class="form-input" placeholder="Mis. Ibu Sari" />
+        </div>
+        <div>
+          <label class="block font-bold mb-2 text-sm">Tanggal Observasi</label>
+          <input id="obsDate" type="date" class="form-input" />
+        </div>
+      </div>
+
+      <div class="disclaimer mt-6">
+        <span style="font-size:20px">⚠️</span>
+        <p><strong>Penting:</strong> Kuesioner ini adalah alat bantu observasi orang tua, <strong>bukan pengganti asesmen profesional</strong> oleh psikolog anak. Isi berdasarkan pengamatan sehari-hari, jujur dan santai.</p>
+      </div>
+
+      <button class="btn-primary w-full mt-6" onclick="startQuiz()">
+        Mulai Kuesioner →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 3 · KUESIONER
+═══════════════════════════════════════════════════════════ -->
+<div id="section-quiz" class="section">
+  <div class="max-w-2xl mx-auto px-4 py-8">
+
+    <!-- Sticky header -->
+    <div class="card mb-6 no-print sticky top-0 z-10" style="background:rgba(255,255,255,.96);backdrop-filter:blur(6px)">
+      <div class="flex items-center justify-between mb-3">
+        <span class="font-bold text-sm" style="color:#475569">Progress Kuesioner</span>
+        <span id="progressText" class="font-black text-sm" style="color:#0284C7">0 / 55</span>
+      </div>
+      <div class="progress-track">
+        <div id="progressFill" class="progress-fill" style="width:0%"></div>
+      </div>
+      <p id="currentGroup" class="text-xs mt-2 font-semibold" style="color:#94A3B8">Memulai...</p>
+    </div>
+
+    <!-- Questions will be rendered here -->
+    <div id="questionContainer"></div>
+
+    <div id="submitArea" class="hidden text-center mt-8">
+      <div class="disclaimer mb-6">
+        <span style="font-size:20px">✅</span>
+        <p>Semua pertanyaan sudah dijawab! Klik tombol di bawah untuk melihat hasil observasi.</p>
+      </div>
+      <button class="btn-primary text-lg" onclick="showResults()">
+        🌟 Lihat Hasil Potensi Anak
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 4 · HASIL
+═══════════════════════════════════════════════════════════ -->
+<div id="section-results" class="section">
+  <div class="max-w-3xl mx-auto px-4 py-8">
+
+    <!-- Print header -->
+    <div class="text-center mb-8">
+      <div class="text-5xl mb-3">🏆</div>
+      <h2 class="text-3xl font-black" style="color:#1E3A5F">Laporan Potensi Anak</h2>
+      <p id="resultSubtitle" class="mt-2" style="color:#64748B"></p>
+    </div>
+
+    <!-- TOP STRENGTHS RADAR -->
+    <div class="card mb-6">
+      <h3 class="font-bold text-lg mb-1">🌟 Peta Kekuatan Karakter</h3>
+      <p class="text-sm mb-4" style="color:#64748B">Berdasarkan VIA Character Strengths — 5 kekuatan teratas</p>
+      <canvas id="radarChart"></canvas>
+    </div>
+
+    <!-- STRENGTH BARS -->
+    <div class="card mb-6">
+      <h3 class="font-bold text-lg mb-4">💪 Top 7 Kekuatan Karakter</h3>
+      <div id="strengthBars"></div>
+    </div>
+
+    <!-- DOMAIN POTENTIALS -->
+    <div class="card mb-6">
+      <h3 class="font-bold text-lg mb-2">🎯 Area Potensi Terkuat</h3>
+      <p class="text-sm mb-4" style="color:#64748B">Domain di mana anak menunjukkan antusiasme & kekuatan terbesar</p>
+      <canvas id="barChart" class="mb-4"></canvas>
+      <div id="domainChips" class="flex flex-wrap justify-center"></div>
+    </div>
+
+    <!-- NARRATIVE -->
+    <div id="narrativeSection" class="card mb-6"></div>
+
+    <!-- RECOMMENDATIONS -->
+    <div id="recSection" class="card mb-6">
+      <h3 class="font-bold text-lg mb-4">🎪 Rekomendasi Kegiatan Konkret</h3>
+      <div id="recCards"></div>
+    </div>
+
+    <!-- GRIT & GROWTH MINDSET -->
+    <div class="card mb-6">
+      <h3 class="font-bold text-lg mb-4">🌱 Membangun Grit & Growth Mindset</h3>
+      <div id="gritSection"></div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="disclaimer mb-8">
+      <span style="font-size:22px">⚠️</span>
+      <div>
+        <p class="font-bold mb-1">Catatan Penting</p>
+        <p>Laporan ini adalah <strong>alat bantu observasi orang tua</strong>, bukan pengganti asesmen profesional oleh psikolog anak bersertifikat. Setiap anak unik dan berkembang dengan ritmenya sendiri. Untuk evaluasi mendalam, konsultasikan dengan psikolog anak atau konselor pendidikan.</p>
+      </div>
+    </div>
+
+    <!-- FRAMEWORK NOTE -->
+    <div class="card mb-8" style="background:#F8FAFC;border:1.5px solid #E2E8F0">
+      <h4 class="font-bold text-sm mb-3" style="color:#475569">📚 Kerangka Ilmiah yang Digunakan</h4>
+      <ul class="text-sm space-y-2" style="color:#64748B">
+        <li>🔬 <strong>VIA Character Strengths</strong> (Peterson & Seligman, 2004) — Positive Psychology, VIA Institute on Character</li>
+        <li>🎓 <strong>Talent Development Models</strong> — Gagné's DMGT & Subotnik's Talent Development Megamodel</li>
+        <li>📊 <strong>Growth Mindset</strong> — Carol Dweck, Stanford University</li>
+        <li>💡 <strong>Grit Framework</strong> — Angela Duckworth, University of Pennsylvania</li>
+        <li>🧠 <strong>Multiple Intelligences Theory</strong> — Howard Gardner, Harvard University</li>
+      </ul>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="flex flex-wrap gap-3 justify-center no-print mb-12">
+      <button class="btn-primary" onclick="window.print()">🖨️ Cetak Laporan</button>
+      <button class="btn-amber" onclick="resetAll()">🔄 Mulai Ulang</button>
+      <button class="btn-outline" onclick="saveToLocal()">💾 Simpan Hasil</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="no-print py-6 text-center text-xs" style="color:#94A3B8;background:#F8FAFC;border-top:1px solid #E2E8F0">
+  <p class="font-bold mb-1">Penjelajah Potensi Anak — Berbasis Sains</p>
+  <p>Alat bantu observasi untuk orang tua · Bukan instrumen klinis atau psikologi · © 2025</p>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  DATA: QUESTIONS
+// ═══════════════════════════════════════════════════
+const SCALE = ['Jarang', 'Kadang', 'Sering', 'Hampir Selalu'];
+const SCALE_EMOJI = ['😐', '🙂', '😊', '🤩'];
+
+const GROUPS = [
+  {
+    id: 'karakter',
+    label: 'Kekuatan Karakter',
+    emoji: '💎',
+    color: '#EDE9FE',
+    textColor: '#5B21B6',
+    questions: [
+      { id:'k1',  text:'Anak sering bertanya "kenapa" atau "bagaimana" tentang hal-hal di sekitarnya', strength:'Rasa Ingin Tahu' },
+      { id:'k2',  text:'Anak tidak mudah menyerah ketika menghadapi tugas atau permainan yang sulit', strength:'Ketekunan (Grit)' },
+      { id:'k3',  text:'Anak mencari cara baru dan kreatif untuk menyelesaikan masalah', strength:'Kreativitas' },
+      { id:'k4',  text:'Anak menyelesaikan apa yang sudah ia mulai sampai tuntas', strength:'Ketekunan (Grit)' },
+      { id:'k5',  text:'Anak menunjukkan empati — ikut sedih ketika teman sedih, ikut senang ketika teman senang', strength:'Kecerdasan Sosial' },
+      { id:'k6',  text:'Anak mau membantu orang lain tanpa diminta', strength:'Kebaikan Hati' },
+      { id:'k7',  text:'Anak senang mempelajari hal-hal baru dan antusias saat belajar sesuatu yang menarik', strength:'Cinta Belajar' },
+      { id:'k8',  text:'Anak mampu mengatur diri sendiri — misalnya berhenti bermain saat waktunya belajar', strength:'Kendali Diri' },
+      { id:'k9',  text:'Anak sering mengambil inisiatif memimpin permainan atau kegiatan bersama teman', strength:'Kepemimpinan' },
+      { id:'k10', text:'Anak berani mencoba hal baru meskipun belum pernah melakukannya', strength:'Keberanian' },
+      { id:'k11', text:'Anak jujur dan berterus terang, bahkan ketika sulit', strength:'Kejujuran' },
+      { id:'k12', text:'Anak mudah memaafkan ketika orang lain membuat kesalahan', strength:'Pemaaf' },
+      { id:'k13', text:'Anak bersyukur dan mengucapkan terima kasih atas hal-hal yang diterimanya', strength:'Rasa Syukur' },
+      { id:'k14', text:'Anak bisa melihat "sisi baik" atau peluang dalam situasi sulit', strength:'Optimisme' },
+    ]
+  },
+  {
+    id: 'minat',
+    label: 'Minat & Fokus',
+    emoji: '🔍',
+    color: '#ECFDF5',
+    textColor: '#065F46',
+    questions: [
+      { id:'m1',  text:'Ada aktivitas tertentu yang membuat anak betah berjam-jam tanpa merasa bosan', strength:'Minat Mendalam' },
+      { id:'m2',  text:'Anak secara spontan berbicara banyak tentang topik yang ia sukai', strength:'Antusiasme' },
+      { id:'m3',  text:'Anak kembali dengan sendirinya ke aktivitas kesukaannya walau sudah berhenti lama', strength:'Minat Konsisten' },
+      { id:'m4',  text:'Anak terlihat "di zona-nya sendiri" saat melakukan aktivitas favorit (penuh konsentrasi)', strength:'Flow State' },
+      { id:'m5',  text:'Anak mencari buku, video, atau informasi sendiri tentang topik yang ia minati', strength:'Inisiatif Belajar' },
+      { id:'m6',  text:'Anak dengan semangat menjelaskan kepada orang lain tentang apa yang ia pelajari', strength:'Komunikasi Minat' },
+    ]
+  },
+  {
+    id: 'belajar',
+    label: 'Gaya Belajar & Ketekunan',
+    emoji: '📚',
+    color: '#EFF6FF',
+    textColor: '#1E40AF',
+    questions: [
+      { id:'b1',  text:'Ketika menghadapi tugas sulit, anak mau mencoba lagi setelah gagal', strength:'Resiliensi' },
+      { id:'b2',  text:'Anak lebih suka belajar dengan melakukan langsung (praktik/eksperimen) daripada hanya membaca', strength:'Belajar Kinestetik' },
+      { id:'b3',  text:'Anak mudah memahami sesuatu jika dijelaskan dengan gambar atau diagram', strength:'Belajar Visual' },
+      { id:'b4',  text:'Anak mudah mengingat informasi jika disampaikan lewat cerita atau diskusi', strength:'Belajar Verbal' },
+      { id:'b5',  text:'Anak bisa berkonsentrasi pada satu tugas dalam waktu yang cukup lama', strength:'Konsentrasi' },
+      { id:'b6',  text:'Anak tidak hanya menghafal, tapi mencoba memahami "mengapa" sesuatu bekerja seperti itu', strength:'Pemikiran Mendalam' },
+      { id:'b7',  text:'Anak merespons tantangan dengan "aku mau coba!" bukan "aku tidak bisa"', strength:'Growth Mindset' },
+      { id:'b8',  text:'Anak bisa belajar dari kesalahan tanpa terlalu lama merasa frustasi', strength:'Ketangguhan Emosi' },
+    ]
+  },
+  {
+    id: 'domain_musik',
+    label: 'Domain: Musik & Ritme',
+    emoji: '🎵',
+    color: '#FFF1F2',
+    textColor: '#9F1239',
+    domain: 'Musik & Ritme',
+    questions: [
+      { id:'dm1', text:'Anak mudah mengingat dan menyanyikan lagu-lagu yang baru ia dengar' },
+      { id:'dm2', text:'Anak memperhatikan ritme, ketukan, atau melodi dalam musik sekitarnya' },
+      { id:'dm3', text:'Anak menunjukkan minat pada alat musik atau bernyanyi' },
+      { id:'dm4', text:'Anak bergerak mengikuti irama musik secara spontan' },
+    ]
+  },
+  {
+    id: 'domain_matematika',
+    label: 'Domain: Matematika & Pola',
+    emoji: '🔢',
+    color: '#FFFBEB',
+    textColor: '#92400E',
+    domain: 'Matematika & Pola',
+    questions: [
+      { id:'dma1', text:'Anak tertarik pada angka, perhitungan, atau pola bilangan' },
+      { id:'dma2', text:'Anak suka puzzle, catur, atau permainan strategi' },
+      { id:'dma3', text:'Anak mudah menemukan pola atau urutan dalam benda-benda di sekitarnya' },
+      { id:'dma4', text:'Anak senang mengurutkan, mengkategorikan, atau mengelompokkan benda' },
+    ]
+  },
+  {
+    id: 'domain_bahasa',
+    label: 'Domain: Bahasa & Cerita',
+    emoji: '📖',
+    color: '#F0FDF4',
+    textColor: '#14532D',
+    domain: 'Bahasa & Cerita',
+    questions: [
+      { id:'dl1', text:'Anak senang membaca buku atau mendengarkan cerita' },
+      { id:'dl2', text:'Anak pandai bercerita dengan urutan yang jelas dan menarik' },
+      { id:'dl3', text:'Anak memiliki kosakata yang luas untuk usianya' },
+      { id:'dl4', text:'Anak suka menulis cerita, puisi, atau catatan-catatan kreatif' },
+    ]
+  },
+  {
+    id: 'domain_gerak',
+    label: 'Domain: Gerak & Olahraga',
+    emoji: '⚽',
+    color: '#F0F9FF',
+    textColor: '#0C4A6E',
+    domain: 'Gerak & Olahraga',
+    questions: [
+      { id:'dg1', text:'Anak memiliki koordinasi tubuh yang baik untuk usianya' },
+      { id:'dg2', text:'Anak senang berlari, melompat, atau aktivitas fisik' },
+      { id:'dg3', text:'Anak mudah belajar gerakan atau olahraga baru' },
+      { id:'dg4', text:'Anak nyaman mengekspresikan diri lewat gerakan (tari, senam, dll)' },
+    ]
+  },
+  {
+    id: 'domain_sosial',
+    label: 'Domain: Sosial & Kepemimpinan',
+    emoji: '🤝',
+    color: '#FDF4FF',
+    textColor: '#581C87',
+    domain: 'Sosial & Kepemimpinan',
+    questions: [
+      { id:'ds1', text:'Anak mudah bergaul dan membuat teman baru' },
+      { id:'ds2', text:'Anak mampu memahami perasaan orang lain dengan baik' },
+      { id:'ds3', text:'Teman-teman cenderung mengikuti ide dan ajakan anak' },
+      { id:'ds4', text:'Anak pintar menyelesaikan konflik atau perselisihan di antara teman' },
+    ]
+  },
+  {
+    id: 'domain_alam',
+    label: 'Domain: Alam & Lingkungan',
+    emoji: '🌿',
+    color: '#F0FDF4',
+    textColor: '#065F46',
+    domain: 'Alam & Lingkungan',
+    questions: [
+      { id:'dn1', text:'Anak tertarik mengamati hewan, tumbuhan, atau fenomena alam' },
+      { id:'dn2', text:'Anak suka mengumpulkan benda-benda alam (batu, daun, serangga, dll)' },
+      { id:'dn3', text:'Anak peka terhadap perubahan di alam sekitarnya (cuaca, musim, dll)' },
+      { id:'dn4', text:'Anak sering bertanya tentang bagaimana alam bekerja' },
+    ]
+  },
+  {
+    id: 'domain_visual',
+    label: 'Domain: Visual & Kreatif',
+    emoji: '🎨',
+    color: '#FFF7ED',
+    textColor: '#7C2D12',
+    domain: 'Visual & Kreatif',
+    questions: [
+      { id:'dv1', text:'Anak suka menggambar, mewarnai, atau membuat kerajinan tangan' },
+      { id:'dv2', text:'Anak memiliki imajinasi visual yang kaya dan kreatif' },
+      { id:'dv3', text:'Anak memperhatikan detail warna, bentuk, dan estetika' },
+      { id:'dv4', text:'Anak senang membangun atau merancang sesuatu (lego, balok, origami, dll)' },
+    ]
+  }
+];
+
+// Flatten all questions
+const ALL_QUESTIONS = [];
+GROUPS.forEach(g => g.questions.forEach(q => ALL_QUESTIONS.push({ ...q, group: g })));
+const TOTAL = ALL_QUESTIONS.length; // 55
+
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+let answers = {}; // questionId -> 0..3
+
+// ═══════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════
+function goTo(sectionId) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(sectionId).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ═══════════════════════════════════════════════════
+//  START QUIZ
+// ═══════════════════════════════════════════════════
+function startQuiz() {
+  const name = document.getElementById('childName').value.trim();
+  const age = document.getElementById('childAge').value;
+  if (!name || !age) {
+    alert('Mohon isi nama dan usia anak terlebih dahulu.');
+    return;
+  }
+  // Set default date
+  if (!document.getElementById('obsDate').value) {
+    document.getElementById('obsDate').value = new Date().toISOString().split('T')[0];
+  }
+  answers = {};
+  renderQuestions();
+  goTo('section-quiz');
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER QUESTIONS
+// ═══════════════════════════════════════════════════
+function renderQuestions() {
+  const container = document.getElementById('questionContainer');
+  container.innerHTML = '';
+
+  let qNum = 0;
+  GROUPS.forEach(group => {
+    // Group header
+    const header = document.createElement('div');
+    header.className = 'mb-3 mt-6';
+    header.innerHTML = `
+      <div class="q-group-label" style="background:${group.color};color:${group.textColor}">
+        ${group.emoji} ${group.label}
+      </div>
+    `;
+    container.appendChild(header);
+
+    group.questions.forEach(q => {
+      qNum++;
+      const card = document.createElement('div');
+      card.className = 'q-card';
+      card.id = `qcard_${q.id}`;
+
+      card.innerHTML = `
+        <p class="font-semibold mb-3 text-sm leading-relaxed" style="color:#1E3A5F">
+          <span class="font-black" style="color:#94A3B8">${qNum}.</span> ${q.text}
+        </p>
+        <div class="flex gap-2 flex-wrap">
+          ${SCALE.map((label, i) => `
+            <button
+              class="scale-btn flex-1 min-w-[70px]"
+              id="btn_${q.id}_${i}"
+              onclick="selectAnswer('${q.id}', ${i})"
+              title="${label}"
+            >
+              <div style="font-size:20px">${SCALE_EMOJI[i]}</div>
+              <div style="font-size:11px;margin-top:2px">${label}</div>
+            </button>
+          `).join('')}
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  });
+
+  updateProgress();
+}
+
+// ═══════════════════════════════════════════════════
+//  SELECT ANSWER
+// ═══════════════════════════════════════════════════
+function selectAnswer(qId, val) {
+  answers[qId] = val;
+
+  // Update button styling
+  SCALE.forEach((_, i) => {
+    const btn = document.getElementById(`btn_${qId}_${i}`);
+    if (!btn) return;
+    btn.className = 'scale-btn flex-1 min-w-[70px]';
+    if (i === val) btn.classList.add(`selected-${i}`);
+  });
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const answered = Object.keys(answers).length;
+  const pct = Math.round((answered / TOTAL) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${answered} / ${TOTAL}`;
+
+  const lastAnswered = Object.keys(answers).slice(-1)[0];
+  if (lastAnswered) {
+    const q = ALL_QUESTIONS.find(q => q.id === lastAnswered);
+    if (q) document.getElementById('currentGroup').textContent = `📍 Seksi: ${q.group.label}`;
+  }
+
+  if (answered === TOTAL) {
+    document.getElementById('submitArea').classList.remove('hidden');
+    document.getElementById('submitArea').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  COMPUTE RESULTS
+// ═══════════════════════════════════════════════════
+function computeResults() {
+  // 1. Strength scores (karakter + belajar groups)
+  const strengthMap = {};
+  GROUPS.filter(g => ['karakter','belajar','minat'].includes(g.id)).forEach(g => {
+    g.questions.forEach(q => {
+      const s = q.strength || q.text.slice(0,20);
+      if (!strengthMap[s]) strengthMap[s] = { sum: 0, count: 0 };
+      strengthMap[s].sum += (answers[q.id] ?? 0);
+      strengthMap[s].count++;
+    });
+  });
+  const strengths = Object.entries(strengthMap)
+    .map(([name, v]) => ({ name, score: v.count > 0 ? (v.sum / v.count) / 3 * 100 : 0 }))
+    .sort((a, b) => b.score - a.score);
+
+  // 2. Domain scores
+  const domainMap = {};
+  GROUPS.filter(g => g.domain).forEach(g => {
+    let sum = 0, count = 0;
+    g.questions.forEach(q => {
+      sum += (answers[q.id] ?? 0);
+      count++;
+    });
+    domainMap[g.domain] = count > 0 ? (sum / count) / 3 * 100 : 0;
+  });
+
+  // 3. Learning style
+  const kinestetik = (answers['b2'] ?? 0) / 3 * 100;
+  const visual_style = (answers['b3'] ?? 0) / 3 * 100;
+  const verbal_style = (answers['b4'] ?? 0) / 3 * 100;
+
+  return { strengths, domainMap, kinestetik, visual_style, verbal_style };
+}
+
+// ═══════════════════════════════════════════════════
+//  SHOW RESULTS
+// ═══════════════════════════════════════════════════
+function showResults() {
+  const name = document.getElementById('childName').value.trim();
+  const age = document.getElementById('childAge').value;
+  const parent = document.getElementById('parentName').value.trim();
+  const date = document.getElementById('obsDate').value;
+
+  // Subtitle
+  const formattedDate = date ? new Date(date).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' }) : '-';
+  document.getElementById('resultSubtitle').innerHTML =
+    `<strong>${name}</strong> · ${age} · ${parent ? parent + ' · ' : ''}${formattedDate}`;
+
+  const { strengths, domainMap } = computeResults();
+  const top7Strengths = strengths.slice(0, 7);
+  const top5Strengths = strengths.slice(0, 5);
+
+  // ── Strength Bars ──
+  const STRENGTH_COLORS = [
+    '#38BDF8','#34D399','#FBBF24','#A78BFA','#FB7185','#6EE7B7','#FCA5A5'
+  ];
+  const barsContainer = document.getElementById('strengthBars');
+  barsContainer.innerHTML = '';
+  top7Strengths.forEach((s, i) => {
+    const pct = Math.round(s.score);
+    const label = pct >= 80 ? '🔥 Sangat Kuat' : pct >= 60 ? '💪 Kuat' : pct >= 40 ? '🌱 Berkembang' : '💤 Perlu Dukungan';
+    barsContainer.innerHTML += `
+      <div class="strength-bar">
+        <div class="flex justify-between items-center mb-2">
+          <span class="font-bold text-sm">${s.name}</span>
+          <span class="text-sm font-black" style="color:${STRENGTH_COLORS[i]}">${pct}% · ${label}</span>
+        </div>
+        <div class="progress-track">
+          <div class="strength-fill" style="width:0%;background:${STRENGTH_COLORS[i]}" data-target="${pct}"></div>
+        </div>
+      </div>
+    `;
+  });
+  // Animate bars
+  setTimeout(() => {
+    document.querySelectorAll('.strength-fill[data-target]').forEach(el => {
+      el.style.width = el.dataset.target + '%';
+    });
+  }, 100);
+
+  // ── Radar Chart ──
+  const existingRadar = Chart.getChart('radarChart');
+  if (existingRadar) existingRadar.destroy();
+  const radarCtx = document.getElementById('radarChart').getContext('2d');
+  new Chart(radarCtx, {
+    type: 'radar',
+    data: {
+      labels: top5Strengths.map(s => s.name),
+      datasets: [{
+        label: name,
+        data: top5Strengths.map(s => Math.round(s.score)),
+        backgroundColor: 'rgba(56,189,248,0.15)',
+        borderColor: '#38BDF8',
+        borderWidth: 3,
+        pointBackgroundColor: '#34D399',
+        pointRadius: 5,
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: { r: { min: 0, max: 100, ticks: { display: false }, grid: { color: '#E2E8F0' } } },
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  // ── Bar Chart (Domains) ──
+  const existingBar = Chart.getChart('barChart');
+  if (existingBar) existingBar.destroy();
+  const sortedDomains = Object.entries(domainMap).sort((a, b) => b[1] - a[1]);
+  const DOMAIN_COLORS = ['#38BDF8','#34D399','#FBBF24','#A78BFA','#FB7185','#6EE7B7','#FCA5A5'];
+  const barCtx = document.getElementById('barChart').getContext('2d');
+  new Chart(barCtx, {
+    type: 'bar',
+    data: {
+      labels: sortedDomains.map(d => d[0]),
+      datasets: [{
+        data: sortedDomains.map(d => Math.round(d[1])),
+        backgroundColor: DOMAIN_COLORS,
+        borderRadius: 10,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { min: 0, max: 100, grid: { color: '#F1F5F9' } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+
+  // ── Domain Chips ──
+  const DOMAIN_META = {
+    'Musik & Ritme':        { emoji:'🎵', color:'#FFF1F2', text:'#9F1239' },
+    'Matematika & Pola':    { emoji:'🔢', color:'#FFFBEB', text:'#92400E' },
+    'Bahasa & Cerita':      { emoji:'📖', color:'#F0FDF4', text:'#14532D' },
+    'Gerak & Olahraga':     { emoji:'⚽', color:'#F0F9FF', text:'#0C4A6E' },
+    'Sosial & Kepemimpinan':{ emoji:'🤝', color:'#FDF4FF', text:'#581C87' },
+    'Alam & Lingkungan':    { emoji:'🌿', color:'#ECFDF5', text:'#065F46' },
+    'Visual & Kreatif':     { emoji:'🎨', color:'#FFF7ED', text:'#7C2D12' },
+  };
+  const chipsContainer = document.getElementById('domainChips');
+  chipsContainer.innerHTML = '';
+  sortedDomains.forEach((d, i) => {
+    const meta = DOMAIN_META[d[0]] || { emoji:'⭐', color:'#F0F9FF', text:'#1E3A5F' };
+    const rank = i < 3 ? ['🥇','🥈','🥉'][i] : '';
+    chipsContainer.innerHTML += `
+      <div class="domain-chip" style="background:${meta.color};color:${meta.text}">
+        <span style="font-size:28px">${meta.emoji}</span>
+        <span class="font-bold text-sm">${rank} ${d[0]}</span>
+        <span class="font-black" style="font-size:18px">${Math.round(d[1])}%</span>
+      </div>
+    `;
+  });
+
+  // ── Narrative ──
+  const top3Domains = sortedDomains.slice(0, 3).map(d => d[0]);
+  const topStrength = top7Strengths[0]?.name || 'Rasa Ingin Tahu';
+  const narrativeEl = document.getElementById('narrativeSection');
+  narrativeEl.innerHTML = `
+    <h3 class="font-bold text-lg mb-4">✨ Gambaran Positif ${name}</h3>
+    <div class="p-4 rounded-2xl mb-4" style="background:linear-gradient(135deg,#E0F2FE,#DCFCE7)">
+      <p class="font-semibold leading-relaxed" style="color:#1E3A5F">
+        ${name} adalah anak yang menunjukkan kekuatan menonjol dalam <strong>${topStrength}</strong> 
+        dan area potensi terbesar di bidang <strong>${top3Domains.join(', ')}</strong>. 
+        Berdasarkan observasi ini, ${name} memiliki kombinasi unik antara kekuatan karakter dan minat 
+        yang dapat dikembangkan secara optimal dengan dukungan yang tepat.
+      </p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      ${top3Domains.map((d, i) => {
+        const meta = DOMAIN_META[d] || { emoji:'⭐' };
+        const desc = getDomainDesc(d);
+        return `
+          <div class="p-4 rounded-xl text-center" style="background:#F8FAFC;border:1.5px solid #E2E8F0">
+            <div style="font-size:36px">${meta.emoji}</div>
+            <div class="font-bold text-sm mt-2">${['Potensi Utama','Potensi Kedua','Potensi Ketiga'][i]}</div>
+            <div class="font-black mt-1" style="color:#0284C7">${d}</div>
+            <div class="text-xs mt-2" style="color:#64748B">${desc}</div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+
+  // ── Recommendations ──
+  const recContainer = document.getElementById('recCards');
+  recContainer.innerHTML = '';
+  top3Domains.forEach((domain, i) => {
+    const recs = getRecommendations(domain);
+    const colors = ['#38BDF8','#34D399','#FBBF24'];
+    recContainer.innerHTML += `
+      <div class="rec-card mb-4" style="border-left-color:${colors[i]};background:#F8FAFC">
+        <div class="flex items-center gap-2 mb-3">
+          <span style="font-size:24px">${DOMAIN_META[domain]?.emoji || '⭐'}</span>
+          <h4 class="font-bold">${domain}</h4>
+          <span class="text-xs px-2 py-1 rounded-full font-bold" style="background:${colors[i]}20;color:${colors[i]}">#${i+1} Potensi</span>
+        </div>
+        <div class="grid grid-cols-1 gap-2">
+          ${recs.map(r => `
+            <div class="flex gap-3 items-start p-3 rounded-xl" style="background:white">
+              <span style="font-size:18px;flex-shrink:0">${r.emoji}</span>
+              <div>
+                <div class="font-bold text-sm">${r.title}</div>
+                <div class="text-xs mt-1" style="color:#475569">${r.desc}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  });
+
+  // ── Grit & Growth Mindset ──
+  const gritScore = ((answers['k2']??0) + (answers['k4']??0) + (answers['b1']??0) + (answers['b7']??0)) / (4 * 3) * 100;
+  const gritLevel = gritScore >= 75 ? 'Tinggi' : gritScore >= 50 ? 'Berkembang' : 'Perlu Dukungan';
+  document.getElementById('gritSection').innerHTML = `
+    <div class="p-4 rounded-2xl mb-4" style="background:#FFFBEB;border:1.5px solid #FDE68A">
+      <div class="flex items-center gap-3 mb-2">
+        <span style="font-size:28px">💪</span>
+        <div>
+          <div class="font-bold">Indikator Grit (Ketekunan)</div>
+          <div class="text-sm" style="color:#64748B">Skor: <strong style="color:#D97706">${Math.round(gritScore)}% · ${gritLevel}</strong></div>
+        </div>
+      </div>
+      <div class="progress-track mt-2"><div class="progress-fill" style="width:${gritScore}%;background:#FBBF24"></div></div>
+    </div>
+    <div class="space-y-3">
+      ${[
+        { emoji:'🗣️', title:'Gunakan Bahasa "Belum"', desc:'Ganti "Aku tidak bisa" dengan "Aku belum bisa tapi aku sedang belajar". Ini membangun growth mindset dari dalam.' },
+        { emoji:'🎯', title:'Tetapkan Target Kecil', desc:'Bagi tujuan besar menjadi langkah-langkah kecil. Rayakan setiap kemajuan, sekecil apapun.' },
+        { emoji:'📔', title:'Jurnal Usaha Harian', desc:'Ajak anak mencatat 1 hal yang ia coba hari ini — bukan hasilnya, tapi usahanya. Ini melatih fokus pada proses.' },
+        { emoji:'🌱', title:'Cerita Tokoh Tangguh', desc:'Bacakan kisah nyata tentang tokoh yang gagal berkali-kali sebelum sukses (Thomas Edison, J.K. Rowling, dll).' },
+        { emoji:'🧩', title:'Beri Tantangan Optimal', desc:'Tugas yang sedikit lebih sulit dari kemampuan saat ini membangun resiliensi. Jangan terlalu mudah, jangan terlalu susah.' },
+      ].map(tip => `
+        <div class="flex gap-3 p-3 rounded-xl" style="background:#F8FAFC;border:1px solid #E2E8F0">
+          <span style="font-size:22px;flex-shrink:0">${tip.emoji}</span>
+          <div>
+            <div class="font-bold text-sm">${tip.title}</div>
+            <div class="text-xs mt-1" style="color:#475569">${tip.desc}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  // Save to localStorage
+  saveToLocal();
+
+  goTo('section-results');
+}
+
+// ═══════════════════════════════════════════════════
+//  DOMAIN DESCRIPTIONS
+// ═══════════════════════════════════════════════════
+function getDomainDesc(domain) {
+  const map = {
+    'Musik & Ritme': 'Kepekaan terhadap melodi, ritme, dan ekspresi musikal yang kuat.',
+    'Matematika & Pola': 'Kemampuan logika, berpikir sistematis, dan menemukan pola.',
+    'Bahasa & Cerita': 'Kekayaan kosakata, kemampuan bercerita, dan ekspresi verbal.',
+    'Gerak & Olahraga': 'Koordinasi tubuh, kecerdasan kinestetik, dan kecintaan gerak.',
+    'Sosial & Kepemimpinan': 'Kemampuan memahami orang lain dan memimpin secara natural.',
+    'Alam & Lingkungan': 'Kepekaan dan rasa ingin tahu terhadap dunia alam.',
+    'Visual & Kreatif': 'Imajinasi visual, estetika, dan kreativitas dalam berkarya.',
+  };
+  return map[domain] || 'Potensi unik yang perlu terus dikembangkan.';
+}
+
+// ═══════════════════════════════════════════════════
+//  RECOMMENDATIONS
+// ═══════════════════════════════════════════════════
+function getRecommendations(domain) {
+  const recs = {
+    'Musik & Ritme': [
+      { emoji:'🎹', title:'Les Musik atau Alat Musik', desc:'Piano, gitar, atau biola sangat baik untuk usia 6-10 tahun. Pilih yang anak minati, bukan yang orang tua inginkan.' },
+      { emoji:'🎤', title:'Paduan Suara atau Musik Kelompok', desc:'Belajar bermain bersama melatih disiplin, kerjasama, dan kepekaan ritme.' },
+      { emoji:'💃', title:'Tari & Gerak Berirama', desc:'Menggabungkan musik dan gerakan mengoptimalkan ekspresi artistik.' },
+      { emoji:'🎧', title:'Eksplorasi Genre Musik', desc:'Perkenalkan beragam genre: klasik, jazz, pop, tradisional. Luaskan referensi musikal.' },
+    ],
+    'Matematika & Pola': [
+      { emoji:'♟️', title:'Catur atau Permainan Strategi', desc:'Catur, puzzle, atau board game strategi mengasah pemikiran logis dan perencanaan.' },
+      { emoji:'🧮', title:'Math Olympiad atau Klub Matematika', desc:'Bergabung dengan komunitas anak yang mencintai matematika untuk stimulasi optimal.' },
+      { emoji:'🔬', title:'Eksperimen Sains Sederhana', desc:'Science kit atau coding toy sangat cocok untuk otak yang suka pola dan logika.' },
+      { emoji:'💻', title:'Belajar Coding Dasar', desc:'Scratch, Python for kids — pemrograman adalah matematika yang kreatif.' },
+    ],
+    'Bahasa & Cerita': [
+      { emoji:'📚', title:'Perpustakaan & Buku Berkualitas', desc:'Kunjungi perpustakaan rutin. Biarkan anak memilih bukunya sendiri untuk membangun cinta baca.' },
+      { emoji:'✍️', title:'Jurnal atau Buku Cerita Pribadi', desc:'Beri buku kosong khusus untuk anak menulis atau menggambar ceritanya sendiri.' },
+      { emoji:'🎭', title:'Teater atau Drama Anak', desc:'Ekspresi verbal dan kemampuan bercerita berkembang pesat lewat drama.' },
+      { emoji:'🗞️', title:'Majalah Anak & Buku Non-fiksi', desc:'Dorong rasa ingin tahu lewat bacaan faktual tentang topik yang ia minati.' },
+    ],
+    'Gerak & Olahraga': [
+      { emoji:'⚽', title:'Olahraga Tim', desc:'Sepak bola, basket, bulu tangkis — olahraga tim melatih fisik sekaligus karakter sosial.' },
+      { emoji:'🏊', title:'Renang', desc:'Salah satu olahraga terbaik untuk semua usia. Mengembangkan koordinasi tubuh secara menyeluruh.' },
+      { emoji:'🤸', title:'Senam atau Martial Arts', desc:'Karate, silat, atau senam mengajarkan disiplin, keseimbangan, dan kendali diri.' },
+      { emoji:'🧗', title:'Outdoor Aktif', desc:'Panjat tebing anak, hiking, atau camping — aktivitas luar ruang membangun keberanian.' },
+    ],
+    'Sosial & Kepemimpinan': [
+      { emoji:'🏕️', title:'Pramuka atau Organisasi Anak', desc:'Pramuka atau OSIS mengembangkan kepemimpinan, kerjasama, dan tanggung jawab sosial.' },
+      { emoji:'🤝', title:'Kegiatan Sosial & Volunteering', desc:'Ajak anak dalam kegiatan sosial — berbagi dengan sesama membangun empati nyata.' },
+      { emoji:'🎤', title:'Public Speaking untuk Anak', desc:'Latihan pidato, debat, atau presentasi sejak dini membangun kepercayaan diri sosial.' },
+      { emoji:'👥', title:'Proyek Kelompok', desc:'Dorong anak untuk memimpin proyek kecil bersama teman (bazar kelas, pertunjukan, dll).' },
+    ],
+    'Alam & Lingkungan': [
+      { emoji:'🌱', title:'Berkebun Bersama', desc:'Tanam sayur atau tanaman hias. Anak belajar sains alam, kesabaran, dan tanggung jawab.' },
+      { emoji:'🦋', title:'Kunjungan ke Alam Terbuka', desc:'Museum alam, kebun binatang, atau taman botani — beri pengalaman langsung dengan alam.' },
+      { emoji:'🔭', title:'Astronomi & Sains Alam', desc:'Teleskop anak atau kunjungan ke planetarium membuka kekaguman terhadap alam semesta.' },
+      { emoji:'📷', title:'Fotografi Alam', desc:'Beri kamera sederhana untuk mendokumentasikan alam. Melatih observasi dan apresiasi.' },
+    ],
+    'Visual & Kreatif': [
+      { emoji:'🎨', title:'Les Melukis atau Menggambar', desc:'Kelas seni memperkenalkan teknik dan media yang beragam: cat air, krayon, digital art.' },
+      { emoji:'🏗️', title:'Lego atau Konstruksi Kreatif', desc:'Lego Technic, origami, atau kerajinan tangan mengembangkan imajinasi spasial.' },
+      { emoji:'📸', title:'Fotografi & Sinematografi Anak', desc:'Beri kamera untuk merekam dan mengedit video pendek. Platform kreativitas modern.' },
+      { emoji:'🖥️', title:'Desain Digital Dasar', desc:'Canva for Kids atau Scratch Art — kreativitas visual di era digital.' },
+    ],
+  };
+  return recs[domain] || [{ emoji:'⭐', title:'Eksplorasi Bebas', desc:'Berikan ruang dan waktu bagi anak untuk bereksplor sesuai minatnya.' }];
+}
+
+// ═══════════════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════════════
+function saveToLocal() {
+  const data = {
+    childName: document.getElementById('childName').value,
+    childAge: document.getElementById('childAge').value,
+    parentName: document.getElementById('parentName').value,
+    date: document.getElementById('obsDate').value,
+    answers,
+    savedAt: new Date().toISOString()
+  };
+  try {
+    localStorage.setItem('potensiAnak_latest', JSON.stringify(data));
+    alert('✅ Hasil berhasil disimpan di browser!');
+  } catch(e) {
+    alert('Gagal menyimpan: ' + e.message);
+  }
+}
+
+function resetAll() {
+  if (!confirm('Yakin ingin memulai ulang? Semua jawaban akan direset.')) return;
+  answers = {};
+  document.getElementById('childName').value = '';
+  document.getElementById('childAge').value = '';
+  document.getElementById('parentName').value = '';
+  document.getElementById('obsDate').value = '';
+  goTo('section-landing');
+}
+
+// ── Load saved data on init ──
+window.addEventListener('DOMContentLoaded', () => {
+  try {
+    const saved = localStorage.getItem('potensiAnak_latest');
+    if (saved) {
+      const d = JSON.parse(saved);
+      if (d.childName) document.getElementById('childName').value = d.childName;
+      if (d.childAge) document.getElementById('childAge').value = d.childAge;
+      if (d.parentName) document.getElementById('parentName').value = d.parentName;
+      if (d.date) document.getElementById('obsDate').value = d.date;
+    }
+  } catch(e) {}
+
+  // Set today as default date
+  if (!document.getElementById('obsDate').value) {
+    document.getElementById('obsDate').value = new Date().toISOString().split('T')[0];
+  }
+});
+</script>
+</body>
+</html>
